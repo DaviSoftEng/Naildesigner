@@ -34,14 +34,15 @@ const HOURS = [
   { dayOfWeek: 6, isOpen: true,  openTime: '09:00', closeTime: '17:00', breakStart: null,    breakEnd: null    }, // Sáb
 ];
 
-// Portfólio inicial (placeholders — troque pelas fotos reais no painel)
+// Portfólio inicial (fotos reais do catálogo — gerencie pelo painel)
 const GALLERY = [
-  { image: '/galeria/01.svg', caption: 'Francesinha clássica em gel',  category: 'unhas',        position: 1 },
-  { image: '/galeria/02.svg', caption: 'Nail art floral delicada',     category: 'unhas',        position: 2 },
-  { image: '/galeria/03.svg', caption: 'Nude rosé com brilho',         category: 'unhas',        position: 3 },
-  { image: '/galeria/04.svg', caption: 'Design com henna',             category: 'sobrancelhas', position: 4 },
-  { image: '/galeria/05.svg', caption: 'Alongamento amendoado',        category: 'unhas',        position: 5 },
-  { image: '/galeria/06.svg', caption: 'Brow lamination',              category: 'sobrancelhas', position: 6 },
+  { image: '/galeria/molde-f1.jpg',             caption: 'Alongamento Molde F1 francesinha', category: 'unhas', position: 1 },
+  { image: '/galeria/gel-na-tips.jpg',          caption: 'Gel na tips com folha dourada',    category: 'unhas', position: 2 },
+  { image: '/galeria/fibra-de-vidro.jpg',       caption: 'Fibra de vidro com glitter',       category: 'unhas', position: 3 },
+  { image: '/galeria/banho-gel-esmaltacao.jpg', caption: 'Banho de gel com glitter rosé',    category: 'unhas', position: 4 },
+  { image: '/galeria/esmaltacao-gel.jpg',       caption: 'Esmaltação em gel nude',           category: 'unhas', position: 5 },
+  { image: '/galeria/blindagem.jpg',            caption: 'Blindagem natural',                category: 'unhas', position: 6 },
+  { image: '/galeria/banho-em-gel.jpg',         caption: 'Banho em gel rosado',              category: 'unhas', position: 7 },
 ];
 
 // Padrões de configuração (só criados se ainda não existirem)
