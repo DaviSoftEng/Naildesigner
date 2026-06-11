@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment variables
+.env
+server/.env
+client/.env
+client/.env.local
+client/.env.production
+
+# Database
+server/prisma/dev.db
+server/prisma/dev.db-journal
+
+# Uploads (fotos enviadas pelo painel)
+server/uploads/
+
+# Build output
+client/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
