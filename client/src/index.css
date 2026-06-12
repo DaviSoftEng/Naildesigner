@@ -131,3 +131,32 @@
     @apply bg-white text-cocoa-light border-linen hover:border-rose/40 hover:text-rose-dark;
   }
 }
+
+/* ── Carrossel do portfólio (vitrine lenta) ────────────────────────────── */
+.gallery-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.gallery-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 55s linear infinite;
+}
+.gallery-marquee:hover .gallery-track,
+.gallery-marquee:focus-within .gallery-track {
+  animation-play-state: paused;
+}
+.gallery-slide {
+  flex: 0 0 auto;
+  width: clamp(11rem, 58vw, 15rem);
+  aspect-ratio: 4 / 5;
+  margin-right: 1rem;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-track { animation: none; }
+}

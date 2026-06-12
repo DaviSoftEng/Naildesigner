@@ -54,6 +54,7 @@ export default function Home() {
   const [settings, setSettings] = useState(null);
   const [serviceFilter, setServiceFilter] = useState('todas');
   const [galleryFilter, setGalleryFilter] = useState('todas');
+  const [galleryExpanded, setGalleryExpanded] = useState(false);
   const [lightbox, setLightbox] = useState(null);
 
   useEffect(() => {
@@ -191,7 +192,10 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay="reveal-delay-1">
-            {filteredGallery.length > 0 ? (
+            {filteredGallery.length === 0 ? (
+              <p className="text-cocoa-light/60 text-center">Em breve, fotos dos nossos trabalhos. 💅</p>
+            ) : galleryExpanded ? (
+              /* Grade completa (mosaico) ao expandir */
               <div className="columns-2 sm:columns-3 gap-4 [column-fill:_balance]">
                 {filteredGallery.map((g) => (
                   <button
@@ -205,18 +209,53 @@ export default function Home() {
                       loading="lazy"
                       className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    {g.caption && (
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-4 pt-10 pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="text-cocoa-dark text-sm font-light">{g.caption}</p>
-                      </div>
-                    )}
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-4 pt-10 pb-3 flex items-end justify-between gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <p className="text-cocoa-dark text-sm font-light">{g.caption}</p>
+                      {g.price != null && (
+                        <span className="text-gold font-serif text-sm whitespace-nowrap">{fmtCurrency(g.price)}</span>
+                      )}
+                    </div>
                   </button>
                 ))}
               </div>
             ) : (
-              <p className="text-cocoa-light/60 text-center">Em breve, fotos dos nossos trabalhos. 💅</p>
+              /* Carrossel lento (vitrine) — pausa ao passar o mouse */
+              <div className="gallery-marquee">
+                <div className="gallery-track">
+                  {[...filteredGallery, ...filteredGallery].map((g, i) => (
+                    <button
+                      key={`${g.id}-${i}`}
+                      onClick={() => setLightbox(g)}
+                      aria-hidden={i >= filteredGallery.length}
+                      tabIndex={i >= filteredGallery.length ? -1 : 0}
+                      className="gallery-slide group relative rounded-3xl overflow-hidden border border-linen bg-petal text-left"
+                    >
+                      <img
+                        src={mediaUrl(g.image)}
+                        alt={g.caption || 'Trabalho do studio'}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-3.5 pt-12 pb-3 flex items-end justify-between gap-2">
+                        <p className="text-cocoa-dark text-xs font-light leading-tight">{g.caption}</p>
+                        {g.price != null && (
+                          <span className="text-gold font-serif text-sm whitespace-nowrap">{fmtCurrency(g.price)}</span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
           </Reveal>
+
+          {filteredGallery.length > 0 && (
+            <Reveal className="text-center mt-10">
+              <button onClick={() => setGalleryExpanded((v) => !v)} className="chip chip-off">
+                {galleryExpanded ? 'Ver menos ↑' : 'Ver todos os trabalhos →'}
+              </button>
+            </Reveal>
+          )}
         </div>
       </section>
 

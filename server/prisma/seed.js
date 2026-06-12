@@ -5,21 +5,29 @@ require('dotenv').config();
 const prisma = new PrismaClient();
 
 // Catálogo inicial do Studio Bella (modelo — edite pelo painel depois)
+// Fotos do catálogo ficam em client/public/galeria (mesmas usadas no portfólio).
+// Catálogo enxuto: 8 serviços ativos. Os demais (active:false) ficam ocultos no
+// site mas seguem no banco/portfólio — reative pelo painel quando quiser.
 const SERVICES = [
-  // Unhas
-  { name: 'Alongamento em Gel',        price: 180, duration: 180, category: 'unhas',        description: 'Aplicação completa de unhas em gel, do preparo à finalização' },
-  { name: 'Manutenção de Gel',         price: 120, duration: 120, category: 'unhas',        description: 'Manutenção do alongamento em gel (até 25 dias)' },
-  { name: 'Banho de Gel',              price: 90,  duration: 90,  category: 'unhas',        description: 'Camada de gel sobre a unha natural para mais resistência' },
-  { name: 'Esmaltação em Gel',         price: 70,  duration: 90,  category: 'unhas',        description: 'Esmaltação em gel com brilho que dura semanas' },
-  { name: 'Manicure Tradicional',      price: 45,  duration: 60,  category: 'unhas',        description: 'Cutilagem e esmaltação tradicional caprichada' },
-  { name: 'Pedicure',                  price: 50,  duration: 60,  category: 'unhas',        description: 'Cuidado completo dos pés com esmaltação' },
-  { name: 'Spa dos Pés + Pedicure',    price: 80,  duration: 90,  category: 'unhas',        description: 'Esfoliação, hidratação e pedicure completa' },
-  { name: 'Nail Art / Decoração',      price: 25,  duration: 30,  category: 'unhas',        description: 'Decoração artística (valor a partir de, por mão)' },
-  { name: 'Remoção de Gel',            price: 50,  duration: 60,  category: 'unhas',        description: 'Remoção segura do gel preservando a unha natural' },
-  // Sobrancelhas
-  { name: 'Design de Sobrancelhas',    price: 45,  duration: 30,  category: 'sobrancelhas', description: 'Design personalizado com mapeamento do rosto' },
-  { name: 'Design com Henna',          price: 65,  duration: 45,  category: 'sobrancelhas', description: 'Design + aplicação de henna para preencher falhas' },
-  { name: 'Brow Lamination',           price: 130, duration: 60,  category: 'sobrancelhas', description: 'Alinhamento dos fios para sobrancelhas cheias e definidas' },
+  // Unhas — catálogo
+  { name: 'Alongamento em Gel',           price: 190, duration: 180, category: 'unhas', image: '/galeria/gel-rose-cromado.jpg',          description: 'Alongamento completo em gel, acabamento impecável' },
+  { name: 'Banho de Gel',                 price: 95,  duration: 90,  category: 'unhas', image: '/galeria/banho-gel-glazed.jpg',          description: 'Camada de gel sobre a unha natural, efeito glazed' },
+  { name: 'Esmaltação em Gel',            price: 80,  duration: 90,  category: 'unhas', image: '/galeria/gel-vinho-glitter.jpg',         description: 'Esmaltação em gel com brilho que dura semanas' },
+  { name: 'Manicure Tradicional',         price: 50,  duration: 60,  category: 'unhas', image: '/galeria/francesinha-natural.jpg',       description: 'Cutilagem e esmaltação caprichada' },
+  { name: 'Nail Art / Decoração',         price: 35,  duration: 45,  category: 'unhas', image: '/galeria/nail-art-linhas-douradas.jpg',  description: 'Decoração autoral personalizada (a partir de)' },
+  { name: 'Pedicure Completa',            price: 60,  duration: 60,  category: 'unhas', image: '/galeria/pedicure.jpg',                  description: 'Cuidado completo dos pés com esmaltação' },
+  // Sobrancelhas — catálogo
+  { name: 'Design de Sobrancelhas',       price: 50,  duration: 30,  category: 'sobrancelhas', image: '/galeria/sobrancelhas-design.jpg', description: 'Design personalizado com mapeamento do rosto' },
+  { name: 'Design com Henna',             price: 70,  duration: 45,  category: 'sobrancelhas', image: '/galeria/sobrancelhas-henna.jpg',  description: 'Design + aplicação de henna para preencher falhas' },
+  // Ocultos do catálogo (active:false) — fotos seguem no portfólio
+  { name: 'Alongamento Coffin Glitter',   price: 210, duration: 180, category: 'unhas', image: '/galeria/coffin-preto-glitter.jpg', active: false, description: 'Alongamento longo formato coffin com degradê de glitter' },
+  { name: 'Encapsulado Marble',           price: 200, duration: 180, category: 'unhas', image: '/galeria/encapsulado-marble.jpg',   active: false, description: 'Alongamento com efeito mármore perolado encapsulado' },
+  { name: 'Encapsulado Aquarela',         price: 160, duration: 150, category: 'unhas', image: '/galeria/encapsulado-candy.jpg',    active: false, description: 'Unhas encapsuladas com arte aquarela em tons candy' },
+  { name: 'Blindagem',                    price: 60,  duration: 60,  category: 'unhas', image: '/galeria/nude-natural.jpg',         active: false, description: 'Blindagem da unha natural com brilho nude duradouro' },
+  { name: 'Esmaltação Minimalista',       price: 45,  duration: 60,  category: 'unhas', image: '/galeria/nude-minimalista.jpg',     active: false, description: 'Esmaltação nude com detalhe minimalista autoral' },
+  { name: 'Nail Art — Swirls',            price: 35,  duration: 45,  category: 'unhas', image: '/galeria/nail-art-swirls-azul.jpg', active: false, description: 'Decoração artística com swirls coloridos (a partir de)' },
+  { name: 'Spa dos Pés + Pedicure',       price: 85,  duration: 90,  category: 'unhas', image: '/galeria/spa-pes.jpg',              active: false, description: 'Esfoliação, hidratação e pedicure completa' },
+  { name: 'Brow Lamination',              price: 140, duration: 60,  category: 'sobrancelhas', image: '/galeria/brow-lamination.jpg', active: false, description: 'Alinhamento dos fios para sobrancelhas cheias e definidas' },
 ];
 
 // Horário de funcionamento (0=Dom ... 6=Sáb). Dom e Seg fechados.
@@ -34,15 +42,23 @@ const HOURS = [
   { dayOfWeek: 6, isOpen: true,  openTime: '09:00', closeTime: '17:00', breakStart: null,    breakEnd: null    }, // Sáb
 ];
 
-// Portfólio inicial (fotos reais do catálogo — gerencie pelo painel)
+// Portfólio inicial (gerencie pelo painel)
 const GALLERY = [
-  { image: '/galeria/molde-f1.jpg',             caption: 'Alongamento Molde F1 francesinha', category: 'unhas', position: 1 },
-  { image: '/galeria/gel-na-tips.jpg',          caption: 'Gel na tips com folha dourada',    category: 'unhas', position: 2 },
-  { image: '/galeria/fibra-de-vidro.jpg',       caption: 'Fibra de vidro com glitter',       category: 'unhas', position: 3 },
-  { image: '/galeria/banho-gel-esmaltacao.jpg', caption: 'Banho de gel com glitter rosé',    category: 'unhas', position: 4 },
-  { image: '/galeria/esmaltacao-gel.jpg',       caption: 'Esmaltação em gel nude',           category: 'unhas', position: 5 },
-  { image: '/galeria/blindagem.jpg',            caption: 'Blindagem natural',                category: 'unhas', position: 6 },
-  { image: '/galeria/banho-em-gel.jpg',         caption: 'Banho em gel rosado',              category: 'unhas', position: 7 },
+  { image: '/galeria/gel-rose-cromado.jpg',         caption: 'Alongamento em gel rosê cromado',   category: 'unhas', position: 1 },
+  { image: '/galeria/coffin-preto-glitter.jpg',     caption: 'Coffin preto com glitter prata',    category: 'unhas', position: 2 },
+  { image: '/galeria/encapsulado-marble.jpg',       caption: 'Encapsulado efeito mármore',        category: 'unhas', position: 3 },
+  { image: '/galeria/gel-vinho-glitter.jpg',        caption: 'Esmaltação em gel vinho com glitter', category: 'unhas', position: 4 },
+  { image: '/galeria/encapsulado-candy.jpg',        caption: 'Encapsulado aquarela candy',        category: 'unhas', position: 5 },
+  { image: '/galeria/nail-art-swirls-azul.jpg',     caption: 'Nail art swirls azul',              category: 'unhas', position: 6 },
+  { image: '/galeria/banho-gel-glazed.jpg',         caption: 'Banho de gel efeito glazed',        category: 'unhas', position: 7 },
+  { image: '/galeria/nail-art-linhas-douradas.jpg', caption: 'Nude fosco com linhas douradas',    category: 'unhas', position: 8 },
+  { image: '/galeria/francesinha-natural.jpg',      caption: 'Francesinha natural',               category: 'unhas', position: 9 },
+  { image: '/galeria/nude-natural.jpg',             caption: 'Nude natural clean',                category: 'unhas', position: 10 },
+  { image: '/galeria/nude-minimalista.jpg',         caption: 'Nude minimalista',                  category: 'unhas', position: 11 },
+  { image: '/galeria/pedicure.jpg',                 caption: 'Pedicure nude impecável',           category: 'unhas', position: 12 },
+  { image: '/galeria/sobrancelhas-design.jpg',      caption: 'Design de sobrancelhas natural',    category: 'sobrancelhas', position: 13 },
+  { image: '/galeria/sobrancelhas-henna.jpg',       caption: 'Sobrancelhas com henna',            category: 'sobrancelhas', position: 14 },
+  { image: '/galeria/brow-lamination.jpg',          caption: 'Brow lamination',                   category: 'sobrancelhas', position: 15 },
 ];
 
 // Padrões de configuração (só criados se ainda não existirem)

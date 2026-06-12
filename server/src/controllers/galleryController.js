@@ -3,14 +3,21 @@ const { audit } = require('../utils/audit');
 
 const CATEGORIES = ['unhas', 'sobrancelhas'];
 
-// Público — portfólio exibido no site
+// Público — portfólio exibido no site (enriquecido com o preço do serviço
+// correspondente, casando pela imagem — preço continua vindo do cadastro de Serviços)
 exports.getGallery = async (req, res) => {
   try {
     const photos = await prisma.galleryPhoto.findMany({
       where: { active: true },
       orderBy: [{ position: 'asc' }, { id: 'desc' }],
     });
-    res.json(photos);
+    const services = await prisma.service.findMany({ select: { image: true, price: true, name: true } });
+    const byImage = new Map(services.filter((s) => s.image).map((s) => [s.image, s]));
+    const enriched = photos.map((p) => {
+      const svc = byImage.get(p.image);
+      return { ...p, price: svc ? svc.price : null, serviceName: svc ? svc.name : null };
+    });
+    res.json(enriched);
   } catch (e) {
     console.error('[getGallery]', e);
     res.status(500).json({ error: 'Erro ao buscar portfólio' });
